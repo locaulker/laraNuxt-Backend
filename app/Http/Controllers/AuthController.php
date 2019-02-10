@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Resources\User as UserResource;
 
 class AuthController extends Controller
 {
+	// Register User
   public function register(UserRegisterRequest $request) {
 
 		$user = User::create([
@@ -28,7 +29,7 @@ class AuthController extends Controller
 		]);
 	}
 
-
+	// Login User
 	public function login(UserLoginRequest $request) {
 		if ( !$token = auth()->attempt($request->only(['email', 'password'])) ) {
 			return response()->json([
@@ -43,4 +44,15 @@ class AuthController extends Controller
 				]
 			]);
 		}
+
+		// User Profile
+		public function user(Request $request) {
+			return new UserResource($request->user());
+		}
+
+		// Logout User
+		public function logout() {
+			auth()->logout();
+		}
+
 	}
